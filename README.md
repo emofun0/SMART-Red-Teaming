@@ -28,7 +28,6 @@ The system follows a cyclic **Agentic Workflow**:
 ## Getting Started
 
 ### Prerequisites
-* Python 3.8+
 * [Ollama](https://ollama.com/) installed and running locally.
 * A Google AI Studio API Key (for Gemini).
 
@@ -36,7 +35,7 @@ The system follows a cyclic **Agentic Workflow**:
 
 1.  **Clone the repository**
     ```bash
-    git clone [https://github.com/emofun0/SMART-Red-Teaming.git](https://github.com/emofun0/SMART-Red-Teaming.git)
+    git clone https://github.com/emofun0/SMART-Red-Teaming.git
     ```
 
 2.  **Install dependencies**
