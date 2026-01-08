@@ -51,15 +51,15 @@ for i in range(0, len(prompts), batch_size):
 
 print("DB build success!")
 
-print("\n--- Retrieval Test (Memory Recall) ---")
-test_query = "Developer Mode"
-results = collection.query(
-    query_texts=[test_query],
-    n_results=1
-)
+# print("\n--- Retrieval Test (Memory Recall) ---")
+# test_query = "Developer Mode"
+# results = collection.query(
+#     query_texts=[test_query],
+#     n_results=1
+# )
 
-print(f"Quering: {test_query}")
-print(f"Matching template ({results['metadatas'][0][0]['name']}):")
-print("-" * 50)
-print(results['documents'][0][0]) 
-print("-" * 50)
+# print(f"Quering: {test_query}")
+# print(f"Matching template ({results['metadatas'][0][0]['name']}):")
+# print("-" * 50)
+# print(results['documents'][0][0]) 
+# print("-" * 50)

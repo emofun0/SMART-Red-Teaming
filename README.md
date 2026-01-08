@@ -13,7 +13,7 @@ This project demonstrates a neuro-symbolic approach to AI safety, combining retr
 The ultimate goal of this project is beyond red teaming. It's automated prompt enhancing for every task.
 
 ## Test Results
-Mainsteam 8b and less LLMs, including Llama3.2 and Qwen3, takes up to 8 rounds. Larger models to be tested.
+Mainsteam 14b and less LLMs, including Llama3.2, Qwen3 and DeepSeek R1, takes up to 8 rounds. Larger models to be tested.
 
 ## System Architecture
 
@@ -45,9 +45,14 @@ The system follows a cyclic **Agentic Workflow**:
     conda activate SMART
     pip install -r requirements.txt
     ```
+    After that, create a .env file, and put your API key in it.
+    ```
+    GOOGLE_API_KEY=Your_Google_API_Key
+    ```
 
 3.  **Run the script**
     ```bash
-    python main.py
+    python prebuilt_jailbreak_db.py # build initial knowledge base
+    python main.py # change local model name and prompt input first
     ```
     
