@@ -36,6 +36,7 @@ The system follows a cyclic **Agentic Workflow**:
 1.  **Clone the repository**
     ```bash
     git clone https://github.com/emofun0/SMART-Red-Teaming.git
+    cd SMART-Red-Teaming/
     ```
 
 2.  **Install dependencies**
