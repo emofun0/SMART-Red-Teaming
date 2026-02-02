@@ -59,7 +59,7 @@ The system follows a cyclic **Agentic Workflow**:
 ### Project Structure
 
 ```
-smart/
+implementation/
   config.py           # AttackConfig, env loading
   models.py            # StrategyOutput, JudgeResult, AttemptRecord, RetrievedTemplate
   clients/             # LLM & target clients
