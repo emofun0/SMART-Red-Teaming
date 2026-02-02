@@ -52,7 +52,32 @@ The system follows a cyclic **Agentic Workflow**:
 
 3.  **Run the script**
     ```bash
-    python prebuilt_jailbreak_db.py # build initial knowledge base
-    python main.py # change local model name and prompt input first
+    python main.py "Your malicious intent"
     ```
-    
+    Optional env vars: `TARGET_MODEL`, `OLLAMA_BASE_URL`, `MAX_ROUNDS`, `DB_PATH`, `LOG_FILE`, `RETRIEVAL_TOP_K`.
+
+### Project Structure
+
+```
+smart/
+  config.py           # AttackConfig, env loading
+  models.py            # StrategyOutput, JudgeResult, AttemptRecord, RetrievedTemplate
+  clients/             # LLM & target clients
+    gemini_client.py   # GeminiLLMClient
+    ollama_client.py   # OllamaTargetClient
+  memory/
+    vector_store.py   # JailbreakVectorStore (ChromaDB)
+  agents/              # One class per agent
+    strategist.py     # StrategistAgent
+    assembler.py      # AssemblerAgent
+    judge.py          # JudgeAgent
+    mutator.py        # MutatorAgent
+  workflow/
+    orchestrator.py   # AttackOrchestrator (agentic loop)
+  utils/
+    session_logger.py # SessionLogger
+main.py               # Entry: AttackOrchestrator().run(intent)
+prebuilt_jailbreak_db.py  # Build vector DB (uses smart.config)
+```
+
+Layers are decoupled: config and models are shared; agents depend only on `GeminiLLMClient` and data types; the orchestrator wires agents, target client, and vector store into the attack workflow.
