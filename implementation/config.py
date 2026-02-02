@@ -1,9 +1,7 @@
 """Configuration and environment settings."""
 
 import os
-from dataclasses import dataclass
-from pathlib import Path
-from typing import List
+from dataclasses import dataclass, fields
 
 from dotenv import load_dotenv
 
@@ -27,15 +25,16 @@ class AttackConfig:
 
     @classmethod
     def from_env(cls, **overrides) -> "AttackConfig":
-        """Build config from environment with optional overrides."""
+        """Build config from environment with optional overrides. Env fallbacks use dataclass defaults."""
+        _defaults = {f.name: f.default for f in fields(cls)}
         return cls(
-            target_model=overrides.get("target_model", os.getenv("TARGET_MODEL", "llama3.1:8b")),
-            ollama_base_url=overrides.get("ollama_base_url", os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")),
-            max_rounds=int(overrides.get("max_rounds", os.getenv("MAX_ROUNDS", "30"))),
-            db_path=overrides.get("db_path", os.getenv("DB_PATH", "./jailbreak_memory_db")),
-            collection_name=overrides.get("collection_name", os.getenv("COLLECTION_NAME", "jailbreak_prompts")),
-            log_file=overrides.get("log_file", os.getenv("LOG_FILE", "attack_session.log")),
-            retrieval_top_k=int(overrides.get("retrieval_top_k", os.getenv("RETRIEVAL_TOP_K", "3"))),
+            target_model=overrides.get("target_model", os.getenv("TARGET_MODEL", _defaults["target_model"])),
+            ollama_base_url=overrides.get("ollama_base_url", os.getenv("OLLAMA_BASE_URL", _defaults["ollama_base_url"])),
+            max_rounds=int(overrides.get("max_rounds", os.getenv("MAX_ROUNDS", str(_defaults["max_rounds"])))),
+            db_path=overrides.get("db_path", os.getenv("DB_PATH", _defaults["db_path"])),
+            collection_name=overrides.get("collection_name", os.getenv("COLLECTION_NAME", _defaults["collection_name"])),
+            log_file=overrides.get("log_file", os.getenv("LOG_FILE", _defaults["log_file"])),
+            retrieval_top_k=int(overrides.get("retrieval_top_k", os.getenv("RETRIEVAL_TOP_K", str(_defaults["retrieval_top_k"])))),
         )
 
 

@@ -3,7 +3,7 @@
 from typing import Optional
 
 from implementation.agents import AssemblerAgent, JudgeAgent, MutatorAgent, StrategistAgent
-from implementation.clients import GeminiLLMClient, OllamaTargetClient
+from implementation.clients import GeminiLLMClient, OllamaConnectionError, OllamaTargetClient
 from implementation.config import AttackConfig
 from implementation.memory import JailbreakVectorStore
 from implementation.models import AttemptRecord
@@ -34,6 +34,14 @@ class AttackOrchestrator:
 
     def run(self, intent: str) -> None:
         """Run full attack for given malicious intent. Logs and prints progress."""
+        print("Checking Ollama connection...")
+        try:
+            self._target.check_connection()
+        except OllamaConnectionError as e:
+            print(f"Pre-check failed: {e}")
+            raise SystemExit(1) from e
+        print("Ollama OK.\n")
+
         self._logger.start_session()
         print(f"\nTarget Intent: {intent}")
         print("=" * 60)

@@ -13,7 +13,7 @@ This project demonstrates a neuro-symbolic approach to AI safety, combining retr
 The ultimate goal of this project is beyond red teaming. It's automated prompt enhancing for every task.
 
 ## Test Results
-Mainsteam 14b and less LLMs, including Llama3.2, Qwen3 and DeepSeek R1, takes up to 8 rounds. Larger models to be tested.
+Mainsteam 14b and less LLMs, including Llama3.2, Qwen3, phi-4 and DeepSeek R1, takes up to 8 rounds. Larger models to be tested.
 
 ## System Architecture
 
