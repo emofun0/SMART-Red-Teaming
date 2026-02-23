@@ -1,3 +1,5 @@
 jailbreak_memory_db/
 .env
 attack_session.log
+implementation/__pycache__/
+.vscode/
