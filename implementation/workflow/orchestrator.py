@@ -7,6 +7,7 @@ from implementation.clients import GeminiLLMClient, OllamaConnectionError, Ollam
 from implementation.config import AttackConfig
 from implementation.memory import JailbreakVectorStore
 from implementation.models import AttemptRecord
+from implementation.protocols import JudgeProtocol, TargetProtocol
 from implementation.utils import SessionLogger
 
 
@@ -16,20 +17,26 @@ class AttackOrchestrator:
     1. Strategist: intent -> search keywords
     2. Vector store: keywords -> templates
     3. Assembler: template + intent -> final prompt
-    4. Target (Ollama): prompt -> response
-    5. Judge: (prompt, response) -> score
+    4. Target (protocol): prompt -> response
+    5. Judge (protocol): (prompt, response) -> structured JudgeResult
     6. On failure: Mutator (intent + history) -> new prompt, repeat until success or max_rounds
     """
 
-    def __init__(self, config: Optional[AttackConfig] = None):
+    def __init__(
+        self,
+        config: Optional[AttackConfig] = None,
+        *,
+        target: Optional[TargetProtocol] = None,
+        judge: Optional[JudgeProtocol] = None,
+    ):
         self._config = config or AttackConfig.from_env()
         self._llm = GeminiLLMClient()
-        self._target = OllamaTargetClient(self._config)
+        self._target: TargetProtocol = target if target is not None else OllamaTargetClient(self._config)
         self._store = JailbreakVectorStore(self._config)
         self._logger = SessionLogger(self._config)
         self._strategist = StrategistAgent(self._llm)
         self._assembler = AssemblerAgent(self._llm)
-        self._judge = JudgeAgent(self._llm)
+        self._judge: JudgeProtocol = judge if judge is not None else JudgeAgent(self._llm)
         self._mutator = MutatorAgent(self._llm)
 
     def run(self, intent: str) -> None:
@@ -76,7 +83,7 @@ class AttackOrchestrator:
                 target_res,
                 eval_res,
             )
-            mutation_history.append(AttemptRecord(prompt=final_prompt, reason=eval_res.reason))
+            mutation_history.append(AttemptRecord(prompt=final_prompt, judge_result=eval_res))
             if eval_res.score == 1:
                 print("\nBREAKTHROUGH ACCOMPLISHED!")
                 return
@@ -99,7 +106,7 @@ class AttackOrchestrator:
                 target_res,
                 eval_res,
             )
-            mutation_history.append(AttemptRecord(prompt=mutated_prompt, reason=eval_res.reason))
+            mutation_history.append(AttemptRecord(prompt=mutated_prompt, judge_result=eval_res))
             if eval_res.score == 1:
                 print("\nMUTATION SUCCESS!")
                 return

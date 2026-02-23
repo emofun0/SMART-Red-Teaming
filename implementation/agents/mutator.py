@@ -29,13 +29,19 @@ class MutatorAgent:
         self._llm = llm
 
     def run(self, intent: str, history: list[AttemptRecord]) -> str:
-        """Return new payload string."""
+        """Return new payload string. Uses structured judge fields (refusal_type, categories) when present."""
         history_text = ""
         for i, item in enumerate(history):
+            j = item.judge_result
             snippet = (item.prompt[:200] + "...") if len(item.prompt) > 200 else item.prompt
             history_text += f"\n--- Failed Attempt {i+1} ---\n"
             history_text += f"Strategy/Prompt Snippet: {snippet}\n"
-            history_text += f"Judge Feedback: {item.reason}\n"
+            history_text += f"Judge: {j.reason}"
+            if j.refusal_type:
+                history_text += f" [refusal_type: {j.refusal_type}]"
+            if j.categories:
+                history_text += f" [categories: {', '.join(j.categories)}]"
+            history_text += "\n"
 
         prompt = MUTATOR_SYSTEM.format(intent=intent, history_text=history_text)
         try:

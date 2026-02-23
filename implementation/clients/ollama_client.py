@@ -14,7 +14,7 @@ class OllamaConnectionError(Exception):
 
 
 class OllamaTargetClient:
-    """Client for local Ollama /generate endpoint."""
+    """Client for local Ollama /generate endpoint. Implements TargetProtocol."""
 
     def __init__(self, config: Optional[AttackConfig] = None):
         self._config = config or AttackConfig.from_env()
